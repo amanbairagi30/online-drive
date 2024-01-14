@@ -1,11 +1,18 @@
 import React from 'react'
 
-const Navbar = () => {
+const Navbar = ({ folderNames }) => {
   return (
     <>
-      <nav className='font-semibold'>
+      <nav >
 
-        <p>root</p>
+        <p className=''>
+
+          <div className='flex gap-4 '>
+          <span className='mr-2 font-semibold'>root</span>
+          <span className='mr-2'>/</span>
+            {folderNames.map(elem => <><div className='font-semibold'>{elem}</div><span className='text-gray-400'>/</span></>)}
+          </div>
+        </p>
 
       </nav>
     </>
