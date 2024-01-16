@@ -3,8 +3,8 @@ import { Button, Card, Input, Modal, ModalBody, ModalContent, ModalFooter, Modal
 import { useFileEntityContext } from '../context/FileEntityContext';
 import { BsFillExclamationCircleFill } from "react-icons/bs"
 
-const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID }) => {
-    const { setFiles } = useFileEntityContext();
+const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrentFolder }) => {
+    const { files, setFiles } = useFileEntityContext();
     const [nameError, setNameError] = useState('');
 
     // State variables to store input field values
@@ -52,10 +52,26 @@ const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID }) => {
             return updatedFiles;
         });
 
+        // Update the currentFolder state to include the new entity
+        setCurrentFolder((prevCurrentFolder) => {
+            console.log("PREVVVVVVVV current foldr " , prevCurrentFolder)
+            if (currentFolder === prevCurrentFolder) {
+                return [...prevCurrentFolder, newEntity];
+            }
+
+            const updatedCurrentFolder = updateFiles(prevCurrentFolder, currentFolder, currentFolderID, newEntity);
+            console.log("UUUUUUUUUUUUPPPPPDATED",updatedCurrentFolder)
+
+            return updatedCurrentFolder;
+        });
+
+        setFolderName('')
+        setFileName('')
         // Close the modal
         onOpenChange(false);
     };
 
+    console.log("create : ", files)
     // Recursive function to update the files structure
     const updateFiles = (files, currentFolder, currentFolderID, newEntity) => {
         return files.map((item) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowLeftCircleFill } from 'react-icons/bs';
 import Navbar from '../components/Navbar';
 import SingleEntity from '../components/SingleEntity';
@@ -9,14 +9,20 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import Form from '../components/Form';
 
 const Home = () => {
-  const { files, setFiles } = useFileEntityContext();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const { files, setFiles } = useFileEntityContext();
 
   const [folderHistory, setFolderHistory] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(files);
   const [folderNameArray, setFolderNameArray] = useState([]);
   const [currentFolderID, setCurrentFolderID] = useState('');
+
+
+  useEffect(() => {
+    // Update currentFolder when files change
+    setCurrentFolder(files);
+  }, [files]);
 
   const handleFolderClick = (folder) => {
     if (folder.type === 'folder') {
@@ -40,8 +46,8 @@ const Home = () => {
 
   console.log(folderNameArray)
   console.log(files)
-  console.log("currentFolder : ",JSON.stringify(currentFolder))
-  console.log("currentFolder ID : ",currentFolderID)
+  console.log("currentFolder : ", currentFolder)
+  console.log("currentFolder ID : ", currentFolderID)
 
   return (
     <>
@@ -51,19 +57,19 @@ const Home = () => {
           <section className='border-b h-[4rem] p-4 flex gap-4 items-center border-gray-400'>
             <BsArrowLeftCircleFill
               className='text-xl cursor-pointer text-gray-400'
-              onClick={handleBackClick}
+              onClick={() => handleBackClick()}
             />
             <Navbar folderNames={folderNameArray} />
           </section>
 
           {/* Main Screen */}
           <section className='border p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-x-0 gap-y-9 max-h-fit border-gray-300 rounded-md '>
-            {currentFolder.map((entity) => (
+            {currentFolder?.map((entity) => (
               <SingleEntity
-                key={entity.name}
-                name={entity.name}
-                type={entity.type}
-                id = {entity.id}
+                key={entity?.name}
+                name={entity?.name}
+                type={entity?.type}
+                id={entity?.id}
                 currentFolder={currentFolder}
                 onClick={() => handleFolderClick(entity)}
               />
@@ -77,7 +83,7 @@ const Home = () => {
           </section>
 
           <Form isOpen={isOpen} onOpenChange={onOpenChange} currentFolder={currentFolder} currentFolderID={currentFolderID} setCurrentFolder={setCurrentFolder} />
-         
+
         </div>
       </main>
     </>
