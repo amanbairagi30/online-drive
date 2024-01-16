@@ -63,6 +63,8 @@ const Home = () => {
                 key={entity.name}
                 name={entity.name}
                 type={entity.type}
+                id = {entity.id}
+                currentFolder={currentFolder}
                 onClick={() => handleFolderClick(entity)}
               />
             ))}
