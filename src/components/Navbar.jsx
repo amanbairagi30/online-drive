@@ -1,3 +1,4 @@
+import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/react'
 import React from 'react'
 
 const Navbar = ({ folderNames }) => {
@@ -5,14 +6,21 @@ const Navbar = ({ folderNames }) => {
     <>
       <nav >
 
-        <p className=''>
-
+        <div className=''>
           <div className='flex gap-4 '>
-          <span className='mr-2 font-semibold'>root</span>
-          <span className='mr-2'>/</span>
-            {folderNames.map(elem => <><div className='font-semibold'>{elem}</div><span className='text-gray-400'>/</span></>)}
+
+            <Breadcrumbs  color={"foreground"}>
+              <BreadcrumbItem>root</BreadcrumbItem>
+              {folderNames.map((elem, index) => (
+                <BreadcrumbItem>{elem}</BreadcrumbItem>
+              ))}
+            </Breadcrumbs>
           </div>
-        </p>
+          {/* 
+            <span className='mr-2 font-semibold'>root</span>
+            <span className='mr-2'>/</span>
+            {folderNames.map(elem => <><div className='font-semibold'></div><span className='text-gray-400'>/</span></>)} */}
+        </div>
 
       </nav>
     </>

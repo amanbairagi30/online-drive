@@ -2,65 +2,30 @@ import React, { useState } from 'react';
 import { BsArrowLeftCircleFill } from 'react-icons/bs';
 import Navbar from '../components/Navbar';
 import SingleEntity from '../components/SingleEntity';
+import { useFileEntityContext } from '../context/FileEntityContext';
+import { FaPlus } from 'react-icons/fa6';
+import { GoPlus } from 'react-icons/go';
+import { Button, useDisclosure } from '@nextui-org/react';
+import Form from '../components/Form';
 
 const Home = () => {
-  const initialFiles = [
-    {
-      name: 'Documents',
-      type: 'folder',
-      children: [
-        {
-          name: 'Work',
-          type: 'folder',
-          children: [
-            { name: 'Report.docx', type: 'file' },
-            { name: 'Presentation.pptx', type: 'file' },
-            { name: 'test.py', type: 'file' },
-          ],
-        },
-        {
-          name: 'Personal',
-          type: 'folder',
-          children: [
-            { name: 'Vacation.jpg', type: 'file' },
-            { name: 'ShoppingList.txt', type: 'file' },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Photos',
-      type: 'folder',
-      children: [
-        { name: 'Family.jpg', type: 'file' },
-        { name: 'Friends.jpg', type: 'file' },
-      ],
-    },
-    {
-      name: 'Music',
-      type: 'folder',
-      children: [
-        { name: 'Song1.mp3', type: 'file' },
-        { name: 'Song2.mp3', type: 'file' },
-      ],
-    },
-    {
-      name: 'Report.pdf',
-      type: 'file',
-    },
-  ];
+  const { files, setFiles } = useFileEntityContext();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
 
   const [folderHistory, setFolderHistory] = useState([]);
-  const [currentFolder, setCurrentFolder] = useState(initialFiles);
+  const [currentFolder, setCurrentFolder] = useState(files);
   const [folderNameArray, setFolderNameArray] = useState([]);
+  const [currentFolderID, setCurrentFolderID] = useState('');
 
   const handleFolderClick = (folder) => {
     if (folder.type === 'folder') {
 
-        const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
+      const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
       setFolderHistory([...folderHistory, currentFolder]);
       setCurrentFolder(folder.children);
-      setFolderNameArray([...folderNameArray , folder.name])
+      setFolderNameArray([...folderNameArray, folder.name])
+      setCurrentFolderID(folder.id);
     }
   };
 
@@ -74,6 +39,9 @@ const Home = () => {
   };
 
   console.log(folderNameArray)
+  console.log(files)
+  console.log("currentFolder : ",JSON.stringify(currentFolder))
+  console.log("currentFolder ID : ",currentFolderID)
 
   return (
     <>
@@ -85,7 +53,7 @@ const Home = () => {
               className='text-xl cursor-pointer text-gray-400'
               onClick={handleBackClick}
             />
-            <Navbar folderNames = {folderNameArray}/>
+            <Navbar folderNames={folderNameArray} />
           </section>
 
           {/* Main Screen */}
@@ -98,7 +66,16 @@ const Home = () => {
                 onClick={() => handleFolderClick(entity)}
               />
             ))}
+
+            <div className='flex items-center px-14 py-2 justify-center w-full'>
+              <Button onPress={onOpen} className='border-2 bg-gray-0 rounded-md w-full hover:bg-gray-100 hover:cursor-pointer h-full flex items-center justify-center border-dashed border-gray-400'>
+                <GoPlus className='text-3xl' />
+              </Button>
+            </div>
           </section>
+
+          <Form isOpen={isOpen} onOpenChange={onOpenChange} currentFolder={currentFolder} currentFolderID={currentFolderID} setCurrentFolder={setCurrentFolder} />
+         
         </div>
       </main>
     </>
