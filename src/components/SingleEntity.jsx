@@ -11,7 +11,9 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 
 
 
-const SingleEntity = ({ name, id, type, onClick, currentFolder }) => {
+const SingleEntity = ({ name, id, type, onClick, currentFolder , location}) => {
+  const isSidebar = location === 'sidebar';
+  console.log("Sidebar : " , isSidebar)
 
   const { files, setFiles } = useFileEntityContext();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -88,7 +90,6 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder }) => {
 
 
 
-
   const handleEntityValue = (e) => {
     setNewEntityValue(e.target.value);
   }
@@ -141,17 +142,17 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder }) => {
 
   return (
     <div
-      className='flex  gap-4 items-start border-b md:border-none border-gray-300 md:items-start justify-between md:justify-center'
+      className={`flex gap-4 ${isSidebar ? "w-full bg--500" : " md:justify-center"} items-start border-b md:border-none border-gray-300 md:items-start justify-between `}
       onDoubleClick={onClick} // Handle double-click to show children
     >
-      <div className=' flex md:flex-col flex-wrap gap-4 items-center justify-center border-black w-fit  py-4 px-6'>
+      <div className={`flex  ${isSidebar ?"flex-row justify-start w-full " : " md:flex-col justify-center"}  flex-wrap gap-4 items-center hover:bg-[#d4eeff] cursor-pointer border-black w-fit  py-4 px-6`}>
         {FileIcon && (
-          <FileIcon className='text-[2rem] md:text-[4rem]  text-[#5fbfff]' />
+          <FileIcon className={`text-[2rem] ${isSidebar ? "text-[1rem]" : "md:text-[4rem]"}   text-[#5fbfff]`} />
         )}
         <p>{name}</p>
       </div>
 
-      <div className='flex md:flex-col gap-2'>
+      <div className={`${isSidebar && "hidden"} flex md:flex-col gap-2`}>
         <PiPencilLineFill onClick={() => { handleOpenModal() }} className='text-md cursor-pointer' />
         <RiDeleteBinLine onClick={() => handleDelete(id)} className='text-md cursor-pointer hover:text-red-500' />
       </div>

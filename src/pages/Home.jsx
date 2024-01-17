@@ -7,6 +7,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { GoPlus } from 'react-icons/go';
 import { Button, useDisclosure } from '@nextui-org/react';
 import Form from '../components/Form';
+import Sidebar from '../components/Sidebar';
 
 const Home = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -52,9 +53,11 @@ const Home = () => {
   return (
     <>
       <main className=' border-red-500 p-4 min-h-screen'>
-        <div className=' w-full grid grid-cols-1 gap-6 h-fit border-black mx-auto max-w-[1280px]'>
+        <div className=' w-full grid grid-cols-9 gap-y-6 gap-x-4 h-fit border-black mx-auto max-w-[1280px]'>
+
+
           {/* Navbar */}
-          <section className='border-b h-[4rem] p-4 flex gap-4 items-center border-gray-400'>
+          <section className='border-b h-[4rem] col-span-9 p-4 flex gap-4 items-center border-gray-400'>
             <BsArrowLeftCircleFill
               className='text-xl cursor-pointer text-gray-400'
               onClick={() => handleBackClick()}
@@ -62,8 +65,18 @@ const Home = () => {
             <Navbar folderNames={folderNameArray} />
           </section>
 
+          <aside className='col-span-9 md:col-span-2 md:flex flex-col items-center justify-start p-2 border border-gray-300 rounded-md'>
+            <Sidebar
+              folderHistory={folderHistory}
+              handleFolderClick = {handleFolderClick}
+              setCurrentFolder={setCurrentFolder}
+              currentFolder={currentFolder}
+              currentFolderID={currentFolderID}
+            />
+          </aside>
+
           {/* Main Screen */}
-          <section className='border p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-x-0 gap-y-9 max-h-fit border-gray-300 rounded-md '>
+          <section className='border p-4 grid grid-cols-1 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-0 gap-y-9 h-fit border-gray-300 rounded-md '>
             {currentFolder?.map((entity) => (
               <SingleEntity
                 key={entity?.name}
@@ -81,6 +94,8 @@ const Home = () => {
               </Button>
             </div>
           </section>
+
+
 
           <Form isOpen={isOpen} onOpenChange={onOpenChange} currentFolder={currentFolder} currentFolderID={currentFolderID} setCurrentFolder={setCurrentFolder} />
 
