@@ -21,7 +21,6 @@ const Home = () => {
 
 
   useEffect(() => {
-    // Update currentFolder when files change
     setCurrentFolder(files);
   }, [files]);
 
@@ -31,7 +30,7 @@ const Home = () => {
       const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
       setFolderHistory([...folderHistory, currentFolder]);
       setCurrentFolder(folder.children);
-      setFolderNameArray([...folderNameArray, folder.name])
+      setFolderNameArray([...folderNameArray, { name: folder.name, id: folder.id }])
       setCurrentFolderID(folder.id);
     }
   };
@@ -40,15 +39,12 @@ const Home = () => {
     if (folderHistory.length > 0) {
       const previousFolder = folderHistory.pop();
       folderNameArray.pop();
+      setFolderNameArray([...folderNameArray])
       setFolderHistory([...folderHistory]);
       setCurrentFolder(previousFolder);
     }
   };
 
-  console.log(folderNameArray)
-  console.log(files)
-  console.log("currentFolder : ", currentFolder)
-  console.log("currentFolder ID : ", currentFolderID)
 
   return (
     <>
@@ -62,21 +58,16 @@ const Home = () => {
               className='text-xl cursor-pointer text-gray-400'
               onClick={() => handleBackClick()}
             />
-            <Navbar folderNames={folderNameArray} />
+            <Navbar handleFolderClick={handleFolderClick} setFolderNames={setFolderNameArray} folderNames={folderNameArray} />
           </section>
 
+          {/* Sidebar */}
           <aside className='col-span-9 md:col-span-2 md:flex flex-col items-center justify-start p-2 border border-gray-300 rounded-md'>
-            <Sidebar
-              folderHistory={folderHistory}
-              handleFolderClick = {handleFolderClick}
-              setCurrentFolder={setCurrentFolder}
-              currentFolder={currentFolder}
-              currentFolderID={currentFolderID}
-            />
+            <Sidebar handleFolderClick = {handleFolderClick}/>
           </aside>
 
           {/* Main Screen */}
-          <section className='border p-4 grid grid-cols-1 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-0 gap-y-9 h-fit border-gray-300 rounded-md '>
+          <section className='border p-4 grid grid-cols-1 gap-4 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-9 h-fit border-gray-300 rounded-md '>
             {currentFolder?.map((entity) => (
               <SingleEntity
                 key={entity?.name}

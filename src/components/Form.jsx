@@ -54,13 +54,13 @@ const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrent
 
         // Update the currentFolder state to include the new entity
         setCurrentFolder((prevCurrentFolder) => {
-            console.log("PREVVVVVVVV current foldr " , prevCurrentFolder)
+
             if (currentFolder === prevCurrentFolder) {
                 return [...prevCurrentFolder, newEntity];
             }
 
             const updatedCurrentFolder = updateFiles(prevCurrentFolder, currentFolder, currentFolderID, newEntity);
-            console.log("UUUUUUUUUUUUPPPPPDATED",updatedCurrentFolder)
+           
 
             return updatedCurrentFolder;
         });

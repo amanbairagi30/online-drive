@@ -4,7 +4,30 @@
 @tailwind utilities;
 
 
-body{
+body {
     font-family: 'Roboto', sans-serif;
-    /* user-select: none; */
+
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    /* background-color:  #e2f3ff; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #5fbfff;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #81cbfd;
+    
 }
