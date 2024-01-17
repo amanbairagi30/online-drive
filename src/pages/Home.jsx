@@ -68,9 +68,9 @@ const Home = () => {
 
           {/* Main Screen */}
           <section className='border p-4 grid grid-cols-1 gap-4 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-9 h-fit border-gray-300 rounded-md '>
-            {currentFolder?.map((entity) => (
+            {currentFolder?.map((entity,ind) => (
               <SingleEntity
-                key={entity?.name}
+                key={ind}
                 name={entity?.name}
                 type={entity?.type}
                 id={entity?.id}

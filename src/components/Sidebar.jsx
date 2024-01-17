@@ -23,6 +23,7 @@ const Sidebar = ({
             <div key={entity.id}>
 
               <SingleEntity
+                key={entity.id}
                 name={entity.name}
                 type={entity.type}
                 id={entity.id}

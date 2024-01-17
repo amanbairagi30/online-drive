@@ -71,7 +71,6 @@ const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrent
         onOpenChange(false);
     };
 
-    console.log("create : ", files)
     // Recursive function to update the files structure
     const updateFiles = (files, currentFolder, currentFolderID, newEntity) => {
         return files.map((item) => {

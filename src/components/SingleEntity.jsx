@@ -13,7 +13,7 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 
 const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
   const isSidebar = location === 'sidebar';
-  console.log("Sidebar : ", isSidebar)
+
 
   const { files, setFiles } = useFileEntityContext();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -124,9 +124,6 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
       FileIcon = BsFiletypeMp3;
       break;
     case 'pptx':
-      FileIcon = BsFiletypePpt;
-      break;
-    case 'docx':
       FileIcon = BsFiletypePpt;
       break;
     case 'docx':
