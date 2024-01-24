@@ -20,9 +20,9 @@ const Home = () => {
   const [currentFolderID, setCurrentFolderID] = useState('');
 
 
-  useEffect(() => {
-    setCurrentFolder(files);
-  }, [files]);
+  // useEffect(() => {
+  //   setCurrentFolder(files);
+  // }, [files]);
 
   const handleFolderClick = (folder) => {
     if (folder.type === 'folder') {
@@ -75,6 +75,7 @@ const Home = () => {
                 type={entity?.type}
                 id={entity?.id}
                 currentFolder={currentFolder}
+                setCurrentFolder={setCurrentFolder}
                 onClick={() => handleFolderClick(entity)}
               />
             ))}

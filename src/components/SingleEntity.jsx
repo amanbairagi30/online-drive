@@ -1,6 +1,6 @@
 // SingleEntity.js
 import React, { useEffect, useState } from 'react';
-import { FaFolder, FaFile, FaFileImage, FaFilePdf } from 'react-icons/fa';
+import { FaFolder, FaFile, FaReact, FaFileImage, FaFilePdf } from 'react-icons/fa';
 import { BiSolidFileTxt } from 'react-icons/bi';
 import { BsFillExclamationCircleFill, BsFiletypeMp4, BsFiletypeMp3, BsFiletypeTxt, BsFiletypeJpg, BsFiletypePdf, BsFiletypePpt, BsFiletypeDocx } from 'react-icons/bs';
 import { AiFillHtml5 } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 
 
 
-const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
+const SingleEntity = ({ name, id, type, onClick, currentFolder, location, setCurrentFolder }) => {
   const isSidebar = location === 'sidebar';
 
 
@@ -33,6 +33,12 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
     setFiles((prevFiles) => {
       const updatedFiles = deleteEntity(prevFiles, currentFolder, entityId);
       return updatedFiles;
+    });
+
+    // Update the currentFolder state to exclude the deleted entity
+    setCurrentFolder((prevCurrentFolder) => {
+      const updatedCurrentFolder = deleteEntity(prevCurrentFolder, currentFolder, entityId);
+      return updatedCurrentFolder;
     });
   };
 
@@ -67,6 +73,11 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
       return updatedFiles;
     });
 
+    setCurrentFolder((prevCurrentFolder) => {
+      const updatedCurrentFolder = renameEntity(prevCurrentFolder, entityId, newName);
+      return updatedCurrentFolder;
+    });
+
     onOpenChange(false);
 
   };
@@ -84,54 +95,39 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder, location }) => {
     });
   };
 
-
-
   const handleEntityValue = (e) => {
     setNewEntityValue(e.target.value);
   }
 
+  const getFileIcon = (type, fileName) => {
+    const folderIcon = FaFolder;
+    const defaultFileIcon = FaFile;
 
-  let FileIcon = null;
+    const fileIcons = {
+      jpg: BsFiletypeJpg,
+      pdf: BsFiletypePdf,
+      mp4: BsFiletypeMp4,
+      mp3: BsFiletypeMp3,
+      txt: BsFiletypeTxt,
+      pptx: BsFiletypePpt,
+      docx: BsFiletypeDocx,
+      jsx: FaReact,
+      html: AiFillHtml5,
+    };
 
-  switch (type.toLowerCase()) {
-    case 'folder':
-      FileIcon = FaFolder;
-      break;
-    case 'file':
-      FileIcon = FaFile;
-      break;
-    default:
-      break;
-  }
+    switch (type.toLowerCase()) {
+      case 'folder':
+        return folderIcon;
+      case 'file':
+        const extension = fileName.split(".")[1]?.toLowerCase();
+        return fileIcons[extension] || defaultFileIcon;
+      default:
+        return null;
+    }
+  };
 
-  switch (name.split(".")[1]) {
-    case 'jpg':
-      FileIcon = BsFiletypeJpg;
-      break;
-    case 'pdf':
-      FileIcon = BsFiletypePdf;
-      break;
-    case 'txt':
-      FileIcon = BsFiletypeTxt;
-      break;
-    case 'html':
-      FileIcon = AiFillHtml5;
-      break;
-    case 'mp4':
-      FileIcon = BsFiletypeMp4;
-      break;
-    case 'mp3':
-      FileIcon = BsFiletypeMp3;
-      break;
-    case 'pptx':
-      FileIcon = BsFiletypePpt;
-      break;
-    case 'docx':
-      FileIcon = BsFiletypeDocx;
-      break;
-    default:
-      break;
-  }
+
+  const FileIcon = getFileIcon(type, name)
 
   return (
     <div
