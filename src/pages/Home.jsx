@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BsArrowLeftCircleFill } from 'react-icons/bs';
 import Navbar from '../components/Navbar';
 import SingleEntity from '../components/SingleEntity';
@@ -24,16 +24,15 @@ const Home = () => {
   //   setCurrentFolder(files);
   // }, [files]);
 
-  const handleFolderClick = (folder) => {
+  const handleFolderClick = useCallback((folder) => {
     if (folder.type === 'folder') {
-
       const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
       setFolderHistory([...folderHistory, currentFolder]);
       setCurrentFolder(folder.children);
       setFolderNameArray([...folderNameArray, { name: folder.name, id: folder.id }])
       setCurrentFolderID(folder.id);
     }
-  };
+  }, [currentFolder, folderHistory, folderNameArray]);
 
   const handleBackClick = () => {
     if (folderHistory.length > 0) {
@@ -63,12 +62,12 @@ const Home = () => {
 
           {/* Sidebar */}
           <aside className='col-span-9 md:col-span-2 md:flex flex-col items-center justify-start p-2 border border-gray-300 rounded-md'>
-            <Sidebar handleFolderClick = {handleFolderClick}/>
+            <Sidebar handleFolderClick={handleFolderClick} />
           </aside>
 
           {/* Main Screen */}
           <section className='border p-4 grid grid-cols-1 gap-4 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-9 h-fit border-gray-300 rounded-md '>
-            {currentFolder?.map((entity,ind) => (
+            {currentFolder?.map((entity, ind) => (
               <SingleEntity
                 key={ind}
                 name={entity?.name}
