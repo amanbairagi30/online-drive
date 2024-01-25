@@ -25,12 +25,44 @@ const Home = () => {
   // }, [files]);
 
   const handleFolderClick = useCallback((folder) => {
+
+    const findClickedFolder = (current, targetId) => {
+      // Check if the current folder is the target
+      if (current.id === targetId) {
+        return current;
+      }
+
+      // Check if the current folder has children
+      if (current.children) {
+        // Recursively search for the target folder in the children
+        for (const child of current.children) {
+          const foundFolder = findClickedFolder(child, targetId);
+          if (foundFolder) {
+            return foundFolder;
+          }
+        }
+      }
+
+      // Target folder not found in this branch
+      return null;
+    };
+
     if (folder.type === 'folder') {
       const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
-      setFolderHistory([...folderHistory, currentFolder]);
-      setCurrentFolder(folder.children);
-      setFolderNameArray([...folderNameArray, { name: folder.name, id: folder.id }])
-      setCurrentFolderID(folder.id);
+      console.log("current", files)
+      const clickedFolder = findClickedFolder({ children: files }, folder.id);
+      console.log("Clicked Folder : new", clickedFolder)
+
+      // Update the folder history with the current state of the folder
+      if (clickedFolder && clickedFolder.children) {
+
+        setCurrentFolder(clickedFolder.children);
+        setFolderHistory([...folderHistory, currentFolder]);
+        // Set the current folder to be the clicked folder
+        // setCurrentFolder(folder.children);
+        setFolderNameArray([...folderNameArray, { name: folder.name, id: folder.id }])
+        setCurrentFolderID(folder.id);
+      }
     }
   }, [currentFolder, folderHistory, folderNameArray]);
 
@@ -44,7 +76,7 @@ const Home = () => {
     }
   };
 
-
+  // console.log("current",currentFolder)
   return (
     <>
       <main className=' border-red-500 p-4 min-h-screen'>

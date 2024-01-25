@@ -3,7 +3,7 @@ import { Button, Card, Input, Modal, ModalBody, ModalContent, ModalFooter, Modal
 import { useFileEntityContext } from '../context/FileEntityContext';
 import { BsFillExclamationCircleFill } from "react-icons/bs"
 
-const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrentFolder }) => {
+const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrentFolder,setFolderHistory }) => {
     const { files, setFiles } = useFileEntityContext();
     const [nameError, setNameError] = useState('');
 
@@ -64,6 +64,8 @@ const Form = ({ isOpen, onOpenChange, currentFolder, currentFolderID ,setCurrent
 
             return updatedCurrentFolder;
         });
+
+        // setFolderHistory()
 
         setFolderName('')
         setFileName('')
