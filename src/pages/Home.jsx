@@ -5,6 +5,8 @@ import SingleEntity from '../components/SingleEntity';
 import { useFileEntityContext } from '../context/FileEntityContext';
 import { FaPlus } from 'react-icons/fa6';
 import { GoPlus } from 'react-icons/go';
+import { CgMenuRight } from 'react-icons/cg';
+import { IoIosCloseCircleOutline  } from 'react-icons/io';
 import { Button, useDisclosure } from '@nextui-org/react';
 import Form from '../components/Form';
 import Sidebar from '../components/Sidebar';
@@ -19,6 +21,8 @@ const Home = () => {
   const [folderNameArray, setFolderNameArray] = useState([]);
   const [currentFolderID, setCurrentFolderID] = useState('');
   const [pathHistory, setPathHistory] = useState([]);
+
+  const [toggle, setToggle] = useState(false);
 
 
 
@@ -70,7 +74,6 @@ const Home = () => {
       const previousPath = pathHistory.pop();
       setPathHistory([...pathHistory]);
 
-      console.log("Prev path ", previousPath)
       folderNameArray.pop();
 
       // Update folderNameArray based on the previousPath
@@ -78,8 +81,8 @@ const Home = () => {
       // setFolderNameArray(updatedFolderNamesArray);
 
       //  // Update folderNameArray based on the previousPath
-       const updatedFolderNamesArray = pathHistory.flat().map(folder => ({ name: folder.name, id: folder.id }));
-       setFolderNameArray(updatedFolderNamesArray);
+      const updatedFolderNamesArray = pathHistory.flat().map(folder => ({ name: folder.name, id: folder.id }));
+      setFolderNameArray(updatedFolderNamesArray);
 
       setFolderHistory([...folderHistory]);
       setCurrentFolder(previousFolder);
@@ -90,32 +93,37 @@ const Home = () => {
     }
   };
 
-  console.log("Path History : ", pathHistory)
-  console.log("FOlder Names array : ", folderNameArray)
 
-  // console.log("current",currentFolder)
   return (
     <>
+      <div className={`${!toggle && "hidden"} bg-black absolute opacity-70 z-[200] w-screen h-screen`}></div>
       <main className=' border-red-500 p-4 min-h-screen'>
         <div className=' w-full grid grid-cols-9 gap-y-6 gap-x-4 h-fit border-black mx-auto max-w-[1280px]'>
 
 
+
           {/* Navbar */}
-          <section className='border-b h-[4rem] col-span-9 p-4 flex gap-4 items-center border-gray-400'>
-            <BsArrowLeftCircleFill
-              className='text-xl cursor-pointer text-gray-400'
-              onClick={() => handleBackClick()}
-            />
-            <Navbar handleFolderClick={handleFolderClick} setFolderNames={setFolderNameArray} folderNames={folderNameArray} />
+          <section className='border-b h-[4rem] col-span-9 p-4 flex gap-4 items-center justify-between border-gray-400'>
+            <div className='flex items-center gap-2'>
+
+              <BsArrowLeftCircleFill
+                className='text-xl cursor-pointer text-gray-400'
+                onClick={() => handleBackClick()}
+              />
+              <Navbar handleFolderClick={handleFolderClick} setFolderNames={setFolderNameArray} folderNames={folderNameArray} />
+            </div>
+            <div className='block text-xl md:hidden' onClick={() => setToggle(!toggle)}><CgMenuRight /></div>
           </section>
 
-          {/* Sidebar */}
-          <aside className='col-span-9 md:col-span-2 md:flex flex-col items-center justify-start p-2 border border-gray-300 rounded-md'>
-            <Sidebar handleFolderClick={handleFolderClick} />
+          <aside className={`col-span-9 ${toggle ? "block rounded-l-lg z-[300] p-4 md:p-0 absolute top-2 shadow-2xl right-0 bg-[#fff] w-[70%]" : " hidden md:col-span-2 md:flex flex-col items-center justify-start p-2 border border-gray-300 rounded-md "}`}>
+            <div className='w-full relative'>
+              <div onClick={()=>setToggle(!toggle)} className='md:hidden cursor-pointer block text-xl absolute top-3 right-10'><IoIosCloseCircleOutline /></div>
+              <Sidebar handleFolderClick={handleFolderClick} />
+            </div>
           </aside>
 
           {/* Main Screen */}
-          <section className='border p-4 grid grid-cols-1 gap-4 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-9 h-fit border-gray-300 rounded-md '>
+          <section className='border  p-4 grid grid-cols-1 gap-4 col-span-9 md:col-span-7 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-9 h-fit gray-300 rounded-md '>
             {currentFolder?.map((entity, ind) => (
               <SingleEntity
                 key={ind}
@@ -128,7 +136,7 @@ const Home = () => {
               />
             ))}
 
-            <div className='flex items-center px-14 py-2 justify-center w-full'>
+            <div className='flex items-center  justify-center w-full'>
               <Button onPress={onOpen} className='border-2 bg-gray-0 rounded-md w-full hover:bg-gray-100 hover:cursor-pointer h-full flex items-center justify-center border-dashed border-gray-400'>
                 <GoPlus className='text-3xl' />
               </Button>

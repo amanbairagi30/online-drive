@@ -131,14 +131,14 @@ const SingleEntity = ({ name, id, type, onClick, currentFolder, location, setCur
 
   return (
     <div
-      className={`flex md:flex-col col-auto gap-4 ${isSidebar ? "w-full" : "md:w-fit md:justify-center pb-2"} hover:bg-[#d4eeff] items-start border-b md:border-none border-gray-300 md:items-center justify-between `}
+      className={`flex md:flex-col col-auto gap-4 ${isSidebar ? "w-full" : "md:w-fit md:justify-center pb-2 border-b md:border md:border-gray-300 rounded-md md:items-center"} hover:bg-[#d4eeff] items-start   justify-between `}
       onDoubleClick={onClick} // Handle double-click to show children
     >
-      <div className={`flex  flex-wrap ${isSidebar ? "flex-row shadow-md justify-start w-full " : " md:flex-col justify-center"}  flex-wrap gap-4 items-center  cursor-pointer border-black  py-4 px-6`}>
+      <div className={`flex flex-wrap ${isSidebar ? "flex-row border-b border-gray-400 items-start justify-start w-full " : " md:flex-col justify-center items-center"}  flex-wrap gap-4  cursor-pointer py-4 px-6`}>
         {FileIcon && (
-          <FileIcon className={`text-[2rem] ${isSidebar ? "text-[20px]" : "md:text-[4rem]"}   text-[#5fbfff]`} />
+          <FileIcon className={`text-[2rem] ${isSidebar ? "text-[17px]" : "md:text-[4rem]"}   text-[#5fbfff]`} />
         )}
-        <p className='w-[6rem] break-words text-center'>{name}</p>
+        <p className={`w-[6rem] ${isSidebar ? "text-[0.91rem]" : ""} break-words text-center`}>{name}</p>
       </div>
 
       <div className={`${isSidebar && "hidden"} flex gap-2`}>
