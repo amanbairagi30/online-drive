@@ -18,63 +18,80 @@ const Home = () => {
   const [currentFolder, setCurrentFolder] = useState(files);
   const [folderNameArray, setFolderNameArray] = useState([]);
   const [currentFolderID, setCurrentFolderID] = useState('');
+  const [pathHistory, setPathHistory] = useState([]);
+
 
 
   // useEffect(() => {
   //   setCurrentFolder(files);
   // }, [files]);
 
-  const handleFolderClick = useCallback((folder) => {
 
-    const findClickedFolder = (current, targetId) => {
-      // Check if the current folder is the target
-      if (current.id === targetId) {
-        return current;
-      }
+  const findClickedFolder = (current, targetId, path = []) => {
+    if (current.id === targetId) {
+      return { folder: current, path };
+    }
 
-      // Check if the current folder has children
-      if (current.children) {
-        // Recursively search for the target folder in the children
-        for (const child of current.children) {
-          const foundFolder = findClickedFolder(child, targetId);
-          if (foundFolder) {
-            return foundFolder;
-          }
+    if (current.children) {
+      for (const child of current.children) {
+        const foundFolder = findClickedFolder(child, targetId, [...path, current]);
+        if (foundFolder) {
+          return foundFolder;
         }
       }
-
-      // Target folder not found in this branch
-      return null;
-    };
-
-    if (folder.type === 'folder') {
-      const updateCurrentFolder = currentFolder.filter(item => item.name === folder.name)
-      console.log("current", files)
-      const clickedFolder = findClickedFolder({ children: files }, folder.id);
-      console.log("Clicked Folder : new", clickedFolder)
-
-      // Update the folder history with the current state of the folder
-      if (clickedFolder && clickedFolder.children) {
-
-        setCurrentFolder(clickedFolder.children);
-        setFolderHistory([...folderHistory, currentFolder]);
-        // Set the current folder to be the clicked folder
-        // setCurrentFolder(folder.children);
-        setFolderNameArray([...folderNameArray, { name: folder.name, id: folder.id }])
-        setCurrentFolderID(folder.id);
-      }
     }
-  }, [currentFolder, folderHistory, folderNameArray]);
+
+    return null;
+  };
+  const generateFullPath = (path) => {
+    return path.filter(folder => folder.name && folder.id).map(folder => ({ name: folder.name, id: folder.id }));
+  };
+
+  const handleFolderClick = useCallback((folder) => {
+    const { folder: clickedFolder, path } = findClickedFolder({ children: files }, folder.id);
+
+    if (clickedFolder && clickedFolder.children) {
+      const fullPath = generateFullPath([...path, clickedFolder]);
+
+      setCurrentFolder(clickedFolder.children);
+      setFolderHistory([...folderHistory, currentFolder]);
+      setFolderNameArray(fullPath);
+      setCurrentFolderID(folder.id);
+
+      // Update path history
+      setPathHistory([...pathHistory, fullPath]);
+    }
+  }, [currentFolder, folderHistory, folderNameArray, pathHistory]);
 
   const handleBackClick = () => {
-    if (folderHistory.length > 0) {
+    if (folderHistory.length > 0 && pathHistory.length > 0) {
       const previousFolder = folderHistory.pop();
+
+      const previousPath = pathHistory.pop();
+      setPathHistory([...pathHistory]);
+
+      console.log("Prev path ", previousPath)
       folderNameArray.pop();
-      setFolderNameArray([...folderNameArray])
+
+      // Update folderNameArray based on the previousPath
+      // const updatedFolderNamesArray = previousPath.map(folder => ({ name: folder.name, id: folder.id }));
+      // setFolderNameArray(updatedFolderNamesArray);
+
+      //  // Update folderNameArray based on the previousPath
+       const updatedFolderNamesArray = pathHistory.flat().map(folder => ({ name: folder.name, id: folder.id }));
+       setFolderNameArray(updatedFolderNamesArray);
+
       setFolderHistory([...folderHistory]);
       setCurrentFolder(previousFolder);
+
+      // Update path history
+    } else {
+      setFolderNameArray([]);
     }
   };
+
+  console.log("Path History : ", pathHistory)
+  console.log("FOlder Names array : ", folderNameArray)
 
   // console.log("current",currentFolder)
   return (

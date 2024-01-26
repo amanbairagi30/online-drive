@@ -1,14 +1,28 @@
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Navbar = ({ folderNames, setFolderNames, handleFolderClick }) => {
-  const handleNavigate = (index,id) => {
-    console.log(id)
-    folderNames.splice(index + 1);
-    setFolderNames([...folderNames])
-    console.log(folderNames)
-    handleFolderClick(folderNames[folderNames.length - 1]);
+  // useEffect(() => {
+  //   // When the main UI state changes, update the breadcrumbs accordingly
+  //   setFolderNames([...folderNames]);
+  // }, [folderNames, setFolderNames]);
+
+  const handleNavigate = (index, id) => {
+    const updatedFolderNames = folderNames.slice(0, index + 1);
+    setFolderNames([...updatedFolderNames]);
+    handleFolderClick(updatedFolderNames[updatedFolderNames.length - 1]);
   };
+
+  const generateBreadcrumbs = () => {
+    const breadcrumbs = folderNames.map((folder, index) => (
+      <BreadcrumbItem key={index} onPress={() => handleNavigate(index, folder.id)}>
+        {folder.name}
+      </BreadcrumbItem>
+    ));
+
+    return breadcrumbs;
+  };
+
 
   return (
     <>
@@ -17,11 +31,7 @@ const Navbar = ({ folderNames, setFolderNames, handleFolderClick }) => {
           <div className='flex gap-4 '>
             <Breadcrumbs color={"foreground"}>
               <BreadcrumbItem onPress={() => handleNavigate(0)}>root</BreadcrumbItem>
-              {folderNames.map((folder, index) => (
-                <BreadcrumbItem key={index} onPress={() => handleNavigate(index , folder.id)}>
-                  {folder.name}
-                </BreadcrumbItem>
-              ))}
+              {generateBreadcrumbs()}
             </Breadcrumbs>
           </div>
         </div>
